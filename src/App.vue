@@ -5,7 +5,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <div>
-    <nav class="navbar bg-body-tertiary">
+    <nav class="navbar  bg-dark navbar-dark">
       <div class="container">
         <router-link class="navbar-brand" to="/">
           <img src="@/assets/logo.svg" alt="Bootstrap" width="30" height="24">
@@ -17,9 +17,12 @@ import HelloWorld from './components/HelloWorld.vue'
       </div>
       </div>
     </nav>
+    <div class="container text-center">
+      <RouterView />
+    </div>
   </div>
   
 
-  <RouterView />
+ 
 </template>
 
