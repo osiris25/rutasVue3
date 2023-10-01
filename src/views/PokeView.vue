@@ -1,49 +1,72 @@
 <script setup>
-// import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
-import {useGetData} from "@/composable/getData";
+import { useGetData } from "@/composable/getData";
+import { useFavoritosStore } from "@/store/favoritos.js";
+
 const route = useRoute();
 const router = useRouter();
-// const pokemon = ref({});
-const {data, getData,loading, error}=useGetData();
-// const getData = async () => {
-//   try {
-//     console.log(`${route.params.name}`, "rutas");
-//     const { data } = await axios.get(
-//       `https://pokeapi.co/api/v2/pokemon/${route.params.name}`
-//     );
-//     pokemon.value = data;
-//     console.log(data);
-//   } catch (error) {
-//     console.log(error);
-//     pokemon.value = null;
-//   }
-// };
-// const back=()=>{
-// router.push("/pokemons");
-// }
+const useFavoritos = useFavoritosStore();
+const { add, findPoke } = useFavoritos;
+console.log(findPoke);
+
+const { data, getData, loading, error } = useGetData();
+
+const back = () => {
+  router.push("/pokemons");
+};
 getData(`https://pokeapi.co/api/v2/pokemon/${route.params.name}`);
 </script>
+
 <template>
   <div class="container-fluid">
-    <div v-if="loading">
-      <p>Cargando ....</p>
-    </div>
-    <div class="alert alert-danger" v-if="error">{{ error }}</div>
-    <div v-if="data">
-      <h1>nombre pokemon:{{ $route.params.name }}</h1>
-      <div class="card" style="width: 18rem;">
-        <img :src="`${data.sprites.front_default}`" class="card-img-top" alt="..." />
-        <div class="card-body">
-          <h5 class="card-title">{{data.species.name}}</h5>
-          <p
-            class="card-text"
-          >Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+    <div class="row">
+      <div class="container">
+        <div class="col-12">
+          <div v-if="loading">
+            <p>Cargando ....</p>
+          </div>
         </div>
       </div>
     </div>
-    <button @click="back" class="btn btn-outline-primary">Volver</button>
+
+    <div class="row">
+      <div class="container">
+        <div class="col-12 mt-2" v-if="error">
+          <p class="alert alert-danger fs-2">{{ error }}</p>  
+          <img class="img-fluid" src="@/assets/pokemon-triste.jpeg" alt="error">
+        </div>
+        <div class="col-12 d-flex justify-content-center m-5" v-if="data">
+          <div class="card mb-3" >
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img :src="`${data.sprites.other.dream_world.front_default}`" width="350"
+                height="350" class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title text-uppercase">{{data.id }}-{{ $route.params.name }}</h5>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Peso:{{data.weight}}</li>
+                    <li class="list-group-item">Altura:{{ data.height}}</li>
+                    <li class="list-group-item">Experiencia: {{ data.base_experience}}</li>        
+                  </ul>
+                  <div col-12>
+                  <button
+                :disabled="findPoke(data.name)"
+                class="btn btn-primary"
+                @click="add(data)"
+              >Agregar Favoritos</button>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 m-4">
+          <button @click="back" class="btn btn-outline-primary">Volver</button>
+</div>    
+      </div>
+    </div>
   </div>
 </template>

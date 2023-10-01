@@ -12,7 +12,7 @@ export const useGetData = ()=>{
             data.value = resp.data;
         }catch(e){
             console.log(e);
-            error.value = "error de servidor";
+            error.value = "No se encontro el pokemon ";
         }finally{
             loading.value =  false;
         }
